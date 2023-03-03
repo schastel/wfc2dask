@@ -4,7 +4,7 @@ see https://wfcommons.org/format or https://github.com/wfcommons/wfformat) to a 
 
 # TL;DR
 * You need to install dask (`conda install dask` or `pip install 'dask[distributed]'`). 
-//TODO Check if this works if dask is not installed!//
+//TODO Check if this works if dask is not installed//
 * `python wfc2dask.py -h` to get help
 * `python wfc2dask.py <workflow_filename>` creates a directory (named out by default) where the Python code needed
   to execute the workflow is stored
