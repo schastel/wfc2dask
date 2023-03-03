@@ -43,7 +43,7 @@ class WorkflowTask:
         codelines.append("             command_arguments = %s," % self.command_arguments)
         codelines.append("             inputs = %s," % self.inputs)
         codelines.append("             outputs = %s," % self.outputs)
-        codelines.append("             simulate = %s," % self.simulate)
+        codelines.append("             simulate = simulate,")  # We want to use the value passed as a parameter
         codelines.append("             randomizer = %s," % randomizer_varname)
         codelines.append("             simulate_minimum_execution_time = %s," % self.simulate_minimum_execution_time)
         codelines.append("             simulate_maximum_execution_time = %s," % self.simulate_maximum_execution_time)
