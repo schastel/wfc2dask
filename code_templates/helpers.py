@@ -25,5 +25,3 @@ def execute_task(taskname:str, command: str, inputs: list[str] = None , outputs:
     else:
         os.system(command)  # TODO Using subprocess etc. could be more appropriate
     return outputs
-
-

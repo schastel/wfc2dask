@@ -16,7 +16,7 @@ def build_project(wfdag, output_directory, overwrite):
         if not overwrite:
             raise exc
     import shutil
-    for template in ["dask_client.py", "dask_workflow.py", "helpers.py"]:
+    for template in ["dask_client.py", "application.py", "helpers.py"]:
         shutil.copy("code_templates/%s" % template, "%s/%s" % (output_directory, template))
     with open("code_templates/run_workflow.py") as fp:
         run_workflow_code = fp.read()
