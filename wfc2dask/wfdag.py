@@ -185,14 +185,10 @@ class WFDAG:
                 task = self.dag_tasks[task_id]
                 noindent_python_codelines.append("# Task %s (%s)" % (task_id, task.wftask.name))
                 fut_task_varname = "fut_%s" % task_id
-                #command = "'%s'" % task.wftask.command if task.wftask.command is not None else "None"
                 fut_inputs_list = ", ".join(["fut_%s" % parent_id for parent_id in task.dag_parents])
-                #outputs_list = list(task.wftask.outputs)
-                # simulate_flag = 'simulate = True' if task.wftask.name in simulation_configuration else 'simulate = False'
-                #simulate_flag = "simulate = True"
-                codeline = "%s = client.submit(execute_task, TASKS['%s'], [%s])" % (fut_task_varname,
-                                                                                    task_id,
-                                                                                    fut_inputs_list)
+                codeline = "%s = client.submit(execute_task, (TASKS['%s'],), [%s])" % (fut_task_varname,
+                                                                                       task_id,
+                                                                                       fut_inputs_list)
                 noindent_python_codelines.append(codeline)
         # future.result() lines
         for level, task_ids in enumerate(reversed(self.ordered_tasks)):
