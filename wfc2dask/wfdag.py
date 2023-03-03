@@ -156,36 +156,51 @@ class WFDAG:
             rep += "\n"
         return rep
 
-    def dask_codelines(self, simulation_configuration: dict = dict()) -> list[str]:
+    def dask_tasks_codelines(self, randomizer_varname):
+        # Build the code for all tasks in the workflow
+        from code_templates.workflow_task import WorkflowTask
+        codelines = []
+        codelines.append("randomizer = random.Random(seed)")
+        codelines.append("TASKS = {}")
+        for dag_task in self.dag_tasks.values():
+            _workflow_task = WorkflowTask(dag_id=dag_task.dag_id,
+                                          name=dag_task.wftask.name,
+                                          command_arguments=dag_task.wftask.command,
+                                          inputs=list(dag_task.wftask.inputs),
+                                          outputs=list(dag_task.wftask.outputs)
+                                          )
+            code = _workflow_task.pythonize(randomizer_varname)
+            codelines.append("TASKS['%s'] = %s" % (dag_task.dag_id, code[0]))
+            codelines.extend([codeline for codeline in code[1:]])
+        return codelines
+
+    def dask_codelines(self) -> list[str]:
         self._build_dag()
         logger.debug('%s' % self)
-        noindent_python_codelines = []
-        #
+        noindent_python_codelines = self.dask_tasks_codelines("randomizer")
+        # client.submit() lines
         for level, task_ids in enumerate(self.ordered_tasks):
             noindent_python_codelines.append("# Level %d (%d tasks)" % (level + 1, len(task_ids)))
             for task_id in task_ids:
                 task = self.dag_tasks[task_id]
                 noindent_python_codelines.append("# Task %s (%s)" % (task_id, task.wftask.name))
                 fut_task_varname = "fut_%s" % task_id
-                command = "'%s'" % task.wftask.command if task.wftask.command is not None else "None"
+                #command = "'%s'" % task.wftask.command if task.wftask.command is not None else "None"
                 fut_inputs_list = ", ".join(["fut_%s" % parent_id for parent_id in task.dag_parents])
-                outputs_list = list(task.wftask.outputs)
+                #outputs_list = list(task.wftask.outputs)
                 # simulate_flag = 'simulate = True' if task.wftask.name in simulation_configuration else 'simulate = False'
-                simulate_flag = "simulate = True"
-                codeline = "%s = client.submit(execute_task, '%s', %s, [%s], %s, %s)" % (fut_task_varname,
-                                                                                         task.wftask.name,
-                                                                                         command,
-                                                                                         fut_inputs_list,
-                                                                                         outputs_list,
-                                                                                         simulate_flag)
+                #simulate_flag = "simulate = True"
+                codeline = "%s = client.submit(execute_task, TASKS['%s'], [%s])" % (fut_task_varname,
+                                                                                    task_id,
+                                                                                    fut_inputs_list)
                 noindent_python_codelines.append(codeline)
-        #
+        # future.result() lines
         for level, task_ids in enumerate(reversed(self.ordered_tasks)):
             noindent_python_codelines.append("# Level %d (%d tasks)" % (level + 1, len(task_ids)))
             for task_id in reversed(task_ids):
                 task = self.dag_tasks[task_id]
                 noindent_python_codelines.append("# Task %s (%s)" % (task_id, task.wftask.name))
                 fut_task_varname = "fut_%s" % task_id
-                codeline = "%s.result()" % fut_task_varname
+                codeline = "TASKS['%s'] = %s.result()" % (task_id, fut_task_varname)
                 noindent_python_codelines.append(codeline)
         return noindent_python_codelines

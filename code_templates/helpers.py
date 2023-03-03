@@ -2,26 +2,28 @@
 import os
 import pathlib
 import time
-import random
 import logging
+from workflow_task import WorkflowTask
+
 
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
 
-def wait_a_bit(minimum_wait: float = 0.2, debug: bool = True) -> None:
-    if debug:
-        time.sleep(minimum_wait + random.random())  # wait for 3 to 4 seconds
-
-
-def execute_task(taskname:str, command: str, inputs: list[str] = None , outputs: list[str] = None, simulate: bool = False) -> tuple[str]:
-    logger.info("Executing task %s: %s / in=%s / out=%s" % (taskname, command, inputs, outputs))
-    if simulate:
-        logger.info("Simulating execution of task %s" % taskname)
-        wait_a_bit()
-        for output in outputs:
-            print(command, " => ", output)
+def execute_task(task: WorkflowTask, fut_inputs_list) -> WorkflowTask:
+    logger.info("Executing task %s/%s: %s / in=%s / out=%s" % (task.name, task.dag_id, task.command_arguments, task.inputs, task.outputs))
+    start = time.time()
+    if task.simulate or task.command_arguments is None or len(task.command_arguments) == 0:
+        logger.info("Simulating execution of task %s" % task.name)
+        # Pretend we do something/Wait some time
+        task.simulate_execution()
+        for output in task.outputs:
+            logger.debug("%s => %s" % (task.command_arguments, output))
             pathlib.Path(output).touch()
     else:
-        os.system(command)  # TODO Using subprocess etc. could be more appropriate
-    return outputs
+        command = " ".join(task.command_arguments)
+        logger.info("Running command for task %s/%s: %s" % (task.name, task.dag_id, command))
+        os.system(command)  # TODO Use subprocess?
+    task.execution_time = time.time()-start
+    logger.info("End of task %s/%s (%f)" % (task.name, task.dag_id, task.execution_time))
+    return task

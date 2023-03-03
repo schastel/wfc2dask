@@ -8,7 +8,7 @@ from wfc2dask.wftask import WFTask
 import logging
 
 
-def build_project(wfdag, output_directory, overwrite):
+def build_project(wfdag: WFDAG, output_directory: str, overwrite: bool) -> None:
     try:
         import os
         os.makedirs(output_directory)
@@ -16,14 +16,15 @@ def build_project(wfdag, output_directory, overwrite):
         if not overwrite:
             raise exc
     import shutil
-    for template in ["dask_client.py", "application.py", "helpers.py"]:
+    for template in ["dask_client.py", "application.py", "helpers.py", "workflow_task.py"]:
         shutil.copy("code_templates/%s" % template, "%s/%s" % (output_directory, template))
     with open("code_templates/run_workflow.py") as fp:
         run_workflow_code = fp.read()
     INDENT = "    "
+    # Workflow code
     noindent_python_codelines = wfdag.dask_codelines()
-    codelines = "\n".join(["%s%s" % (INDENT, codeline) for codeline in noindent_python_codelines])
-    run_workflow_code = run_workflow_code.replace("# Generated code goes here", codelines)
+    wf_codelines = "\n".join(["%s%s" % (INDENT, codeline) for codeline in noindent_python_codelines])
+    run_workflow_code = run_workflow_code.replace("# Generated code goes here", wf_codelines)
     with open("%s/%s" % (output_directory, "run_workflow.py"), "w") as fp:
         fp.write(run_workflow_code)
 
