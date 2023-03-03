@@ -3,8 +3,8 @@ wfc2dask.py is a tool that translates workflows specified using the WFCommons wo
 see https://wfcommons.org/format or https://github.com/wfcommons/wfformat) to a workflow actionnable through dask
 
 # TL;DR
-* You need to install dask (`conda install dask` or `pip install 'dask[distributed]'`). 
-//TODO Check if this works if dask is not installed//
+* You need to install dask (see https://docs.dask.org/en/stable/install.html that will tell you to run `conda install
+dask` or `pip install 'dask[distributed]'`).  //TODO Check if this works if dask is not installed//
 * `python wfc2dask.py -h` to get help
 * `python wfc2dask.py <workflow_filename>` creates a directory (named out by default) where the Python code needed
   to execute the workflow is stored
