@@ -56,7 +56,7 @@ class WFTask:
                 else:
                     logger.debug(f"{file['link']} not supported: must be either input or output")
         try:
-            task.command = " ".join(o_task["command"]["arguments"])
+            task.command = o_task["command"]["arguments"]
         except KeyError:
             pass  # If the command is not specified, we will fake it by creating empty output files
         return task
