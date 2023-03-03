@@ -45,12 +45,6 @@ def main():
     args = process_arguments()
     loglevel = logging.DEBUG if args.debug else logging.INFO
     logging.basicConfig(level=loglevel, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-    # in_fn = "samples/others/wrench/simple_workflow.json"
-    # in_fn = "samples/others/wrench/nighres_workflow.json"
-    # in_fn = "samples/makeflow-instances/bwa-chameleon-large-003.json"
-    # in_fn = "samples/makeflow-instances/bwa-chameleon-small-001.json"
-    # in_fn = "samples/unittests/hello-world-join.json"
-    # in_fn = "samples/unittests/hello-world-sequence.json"
     wfdag = WFDAG.from_tasks(*WFTask.load(args.workflow_filename))
     build_project(wfdag, args.output_directory, args.force_overwrite)
 
