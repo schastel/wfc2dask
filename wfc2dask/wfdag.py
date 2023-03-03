@@ -186,9 +186,9 @@ class WFDAG:
                 noindent_python_codelines.append("# Task %s (%s)" % (task_id, task.wftask.name))
                 fut_task_varname = "fut_%s" % task_id
                 fut_inputs_list = ", ".join(["fut_%s" % parent_id for parent_id in task.dag_parents])
-                codeline = "%s = client.submit(execute_task, (TASKS['%s'],), [%s])" % (fut_task_varname,
-                                                                                       task_id,
-                                                                                       fut_inputs_list)
+                codeline = "%s = client.submit(execute_task, TASKS['%s'], [%s])" % (fut_task_varname,
+                                                                                    task_id,
+                                                                                    fut_inputs_list)
                 noindent_python_codelines.append(codeline)
         # future.result() lines
         for level, task_ids in enumerate(reversed(self.ordered_tasks)):
