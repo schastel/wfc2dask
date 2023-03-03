@@ -1,9 +1,10 @@
-#
-# Modify this according to your local dask configuration
-# Lots of info there:
-# https://docs.dask.org/en/stable/configuration.html
-# https://dask.pydata.org/en/latest/scheduling.html
-#
+"""
+Feel free to modify this to target your local dask configuration
+
+Lots of info there:
+https://docs.dask.org/en/stable/configuration.html
+https://dask.pydata.org/en/latest/scheduling.html
+"""
 from dask.distributed import Client
 
 

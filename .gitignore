@@ -1,1 +1,7 @@
 __pycache__/
+/.coverage
+/out
+/htmlcov
+/samples/others/
+/.idea
+/tests/external_wfcommons_worflows/

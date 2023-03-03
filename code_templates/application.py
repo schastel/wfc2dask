@@ -1,3 +1,9 @@
+"""
+You don't need to modify this unless you know what you're doing
+
+This is what you need to run with Python to execute the dask workflow
+application, main, driver, or custom name, feel free to rename this file.
+"""
 from dask_client import build_dask_client
 from run_workflow import run_workflow
 import json
@@ -11,8 +17,9 @@ def process_arguments():
     import argparse
     import sys
     parser = argparse.ArgumentParser(prog=sys.argv[0],
-                                     description='Runs a workflow through dask TODO')  # TODO
-    parser.add_argument("-dns", "--do-not-simulate", help="Do not simulate all tasks (default: do simulate all tasks)", action="store_false")
+                                     description='Runs a workflow through dask')  # TODO
+    parser.add_argument("-nosim", "--do-not-simulate",
+                        help="Do not simulate all tasks (default: do simulate all tasks)", action="store_false")
     parser.add_argument("-s", "--seed", help="Randomizer seed (used when simulating)")
     return parser.parse_args()
 

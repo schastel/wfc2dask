@@ -1,6 +1,6 @@
 import unittest
 
-from wfc2dask.wftask import WFTask
+from wfc2dask.wfctask import WFCTask
 from wfc2dask.wfdag import WFDAG
 
 
@@ -11,7 +11,7 @@ logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(leve
 class TestWFDAG(unittest.TestCase):
     def test_sequence(self):
         in_fn = "samples/unittests/hello-world-sequence.json"
-        tasks, wfname = WFTask.load(in_fn)
+        tasks, wfname = WFCTask.load(in_fn)
         wfdag = WFDAG(wfname)
         for task in tasks:
             wfdag.add_task(task)
@@ -19,7 +19,7 @@ class TestWFDAG(unittest.TestCase):
 
     def test_join(self):
         in_fn = "samples/unittests/hello-world-join.json"
-        tasks, wfname = WFTask.load(in_fn)
+        tasks, wfname = WFCTask.load(in_fn)
         wfdag = WFDAG(wfname)
         for task in tasks:
             wfdag.add_task(task)
@@ -28,7 +28,7 @@ class TestWFDAG(unittest.TestCase):
 
     def test_big(self):
         in_fn = "samples/others/makeflow-instances/blast-chameleon-large-004.json"
-        tasks, wfname = WFTask.load(in_fn)
+        tasks, wfname = WFCTask.load(in_fn)
         wfdag = WFDAG(wfname)
         for task in tasks:
             wfdag.add_task(task)

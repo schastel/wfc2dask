@@ -1,11 +1,13 @@
+"""
+
+A class used to define and help execute a task in a dask workflow
+
+You don't need to modify this unless you know what you're doing
+
+TODO The JSON should actually be a WFCTask
+"""
 import random
 import time
-import json
-
-
-class WorkflowTaskJSONEncoder(json.JSONEncoder):
-    def default(self, obj):
-        return obj.to_json()
 
 
 class WorkflowTask:
@@ -37,15 +39,14 @@ class WorkflowTask:
                                            self.simulate_maximum_execution_time))
 
     def pythonize(self, randomizer_varname: str = "randomizer") -> list[str]:
-        codelines = []
-        codelines.append("WorkflowTask(dag_id = '%s'," % self.dag_id)
-        codelines.append("             name = '%s'," % self.name)
-        codelines.append("             command_arguments = %s," % self.command_arguments)
-        codelines.append("             inputs = %s," % self.inputs)
-        codelines.append("             outputs = %s," % self.outputs)
-        codelines.append("             simulate = simulate,")  # We want to use the value passed as a parameter
-        codelines.append("             randomizer = %s," % randomizer_varname)
-        codelines.append("             simulate_minimum_execution_time = %s," % self.simulate_minimum_execution_time)
-        codelines.append("             simulate_maximum_execution_time = %s," % self.simulate_maximum_execution_time)
-        codelines.append("             )")
+        codelines = ["WorkflowTask(dag_id = '%s'," % self.dag_id,
+                     "             name = '%s'," % self.name,
+                     "             command_arguments = %s," % self.command_arguments,
+                     "             inputs = %s," % self.inputs,
+                     "             outputs = %s," % self.outputs,
+                     "             simulate = simulate,",
+                     "             randomizer = %s," % randomizer_varname,
+                     "             simulate_minimum_execution_time = %s," % self.simulate_minimum_execution_time,
+                     "             simulate_maximum_execution_time = %s," % self.simulate_maximum_execution_time,
+                     "             )"]
         return codelines

@@ -1,10 +1,8 @@
 """
-TODO
-
 See README.md
 """
 from wfc2dask.wfdag import WFDAG
-from wfc2dask.wftask import WFTask
+from wfc2dask.wfctask import WFCTask
 import logging
 
 
@@ -37,7 +35,8 @@ def process_arguments():
     parser.add_argument("workflow_filename", help="Name of the file describing the workflow")
     parser.add_argument("-d", "--debug", help="Debug mode (Info mode by default)", action="store_true")
     parser.add_argument("-o", "--output_directory", help="Output directory name", default="out")
-    parser.add_argument("-f", "--force_overwrite", help="Force overwrite if output_directory already exists", action="store_true")
+    parser.add_argument("-f", "--force_overwrite", help="Force overwrite if output_directory already exists",
+                        action="store_true")
     return parser.parse_args()
 
 
@@ -45,7 +44,7 @@ def main():
     args = process_arguments()
     loglevel = logging.DEBUG if args.debug else logging.INFO
     logging.basicConfig(level=loglevel, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-    wfdag = WFDAG.from_tasks(*WFTask.load(args.workflow_filename))
+    wfdag = WFDAG.from_tasks(*WFCTask.load(args.workflow_filename))
     build_project(wfdag, args.output_directory, args.force_overwrite)
 
 
